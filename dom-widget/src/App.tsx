@@ -65,7 +65,7 @@ console.log(tree);
     return (
     <ul key={`${tree.className}-ul`}>
       <li key={`${tree.className}-li`}>
-        <div onClick={(e) => highlightNode(e, tree)}>{`Tag name: ${tree.tag}`}</div>
+        <div onClick={(e) => highlightNode(e, tree)}>{tree.tag}</div>
         {tree.children && tree.children.map((child, idx) => renderParentDOM(child))}
       </li> 
     </ul>)
@@ -74,6 +74,7 @@ console.log(tree);
   return (
     <div className="App">
       <h1>DOM tree</h1>
+      <div id="divider"></div>
       {tree && renderParentDOM(tree)}
     </div>
   );
