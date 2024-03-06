@@ -5,14 +5,15 @@ type Node = { tag: string; className?: string; children: Node[] | null; } | null
 
 function App() {
   const [tree, setTree] = useState<Node>(null);
+  const [isTreeDisplayed, setIsTreeDisplayed] = useState(false);
 
 console.log({tree})
 
   useEffect(() => {
+    if (isTreeDisplayed) {
     window.parent.postMessage({type: 'getDOM'}, '*');
-  
-    
-  }, [])
+    }
+  }, [isTreeDisplayed])
   
   const generateDOMTree = (node: HTMLElement | Element | null) => {
     if (!node) return null;
@@ -73,9 +74,13 @@ console.log(tree);
   
   return (
     <div className="App">
-      <h1>DOM tree</h1>
+      <h1>DOM Tree Widget</h1>
       <div id="divider"></div>
-      {tree && renderParentDOM(tree)}
+      {tree && isTreeDisplayed 
+      ? renderParentDOM(tree) 
+      : <div style={{display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+        <button onClick={() => setIsTreeDisplayed(true)}>Show DOM Tree</button>
+        </div>}
     </div>
   );
 }
