@@ -1,7 +1,7 @@
 import {useEffect, useState, useCallback} from 'react';
 import './App.css';
 
-type Node = { tag: string; id?: string; className?: string; children: Node[] | null; } | null;
+type Node = { tag: string; className?: string; children: Node[] | null; } | null;
 
 function App() {
   const [tree, setTree] = useState<Node>(null);
@@ -18,12 +18,7 @@ console.log({tree})
     if (!node) return null;
     const children: Node[] = Array.from(node.children).map((child) => generateDOMTree(child));
 
-    // @ts-expect-error
-    const id = node?.attributes && node.attributes.id ? node.attributes.value : null;
-    // @ts-expect-error
-    const className = node?.attributes && node.attributes.class ? node.attributes.class.value : null;
-
-    return {tag: node.tagName, id, className, children};
+    return {tag: node.tagName, className: node.className, children};
   }
 
   const handleGetDOM = (event: MessageEvent<any>) => {
@@ -58,40 +53,20 @@ console.log({tree})
 
 console.log(tree);
 
-  // window.addEventListener('message', function(event) {
-  //   // if(event.origin === 'http://localhost/3000')
-  //   // {
-  //     // alert('Received message: ' + event.data.message);
-  //     console.log(event.data);
-  //   // }
-  //   // else
-  //   // {
-  //   //   alert('Origin not allowed!');
-  //   // }
-  // }, false);
-
   const highlightNode = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, node: Node) => {
     console.log('hover');
     e.stopPropagation();
-    window.parent.postMessage({type: 'highlightNode', tag: node?.tag, id: node?.id, className: node?.className }, '*');
+    window.parent.postMessage({type: 'highlightNode', className: node?.className }, '*');
   }
 
-  const undoHighlightNode = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, node: Node) => {
-    console.log('hover');
-    e.stopPropagation();
-  
-
-    window.parent.postMessage({type: 'undoHighlightNode', tag: node?.tag, id: node?.id, className: node?.className }, '*');
-  }
-
-  const renderParentDOM = (tree: Node, level = 0, idx?: number) => { 
+  const renderParentDOM = (tree: Node) => { 
     if (!tree) return null;
 
     return (
-    <ul key={`${tree.tag}-${tree.id}-${tree.className}-${level}-${idx}-ul`}>
-      <li key={`${tree.tag}-${tree.id}-${tree.className}-${level}-${idx}-li`}>
-        <div onMouseEnter={(e) => highlightNode(e, tree)} onMouseLeave={(e) => undoHighlightNode(e, tree)}>{tree.tag}</div>
-        {tree.children && tree.children.map((child, idx) => renderParentDOM(child, level + 1, idx))}
+    <ul key={`${tree.className}-ul`}>
+      <li key={`${tree.className}-li`}>
+        <div onClick={(e) => highlightNode(e, tree)}>{`Tag name: ${tree.tag}`}</div>
+        {tree.children && tree.children.map((child, idx) => renderParentDOM(child))}
       </li> 
     </ul>)
    }
