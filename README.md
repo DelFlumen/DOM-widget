@@ -2,8 +2,9 @@
 
 Steps to embed the widget:
 
-1. In your target site: put <script> tag in html with the code from parentScript.js (dom-widget/parentScript.js in the current repository)
-2. In your target site: put next element as a **first child** of the body element:
+1. In your target site: put **<script>** tag in **html** with the code from parentScript.js (dom-widget/parentScript.js in the current repository)
+2. In your target site: put next element as a **first child** of the **body** element:
+   
     <iframe
           id="frame"
           src="https://dom-widget.onrender.com/"
@@ -11,7 +12,7 @@ Steps to embed the widget:
           width="100%"
           frameborder="0" 
           scrolling="no" 
-        >
-    </iframe>
-3. Launch the target site in a browser of your choice
-4. Enjoy navigating DOM tree!
+        ></iframe>
+    
+4. Launch the target site in a browser of your choice
+5. Enjoy navigating DOM tree!
