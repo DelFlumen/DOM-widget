@@ -2,7 +2,7 @@
 
 Steps to embed the widget:
 
-1. In your target site: put **<script>** tag in **html** with the code from parentScript.js (dom-widget/parentScript.js in the current repository)
+1. In your target site: in the end of **body** element put **<script>** tag with the code from parentScript.js (dom-widget/parentScript.js in the current repository)
 2. In your target site: put next element as a **first child** of the **body** element:
    
     <iframe
