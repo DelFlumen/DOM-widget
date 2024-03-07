@@ -52,6 +52,13 @@ function App() {
     setIsWidgetDisplayed(!isWidgetDisplayed);
   }
 
+  const displayTree = () => { 
+    setIsTreeDisplayed(true);
+
+    window.parent.postMessage({type: "showTree"}, '*');
+
+  }
+
   const renderParentDOMTree = (tree: Node) => { 
     if (!tree) return null;
 
@@ -65,7 +72,7 @@ function App() {
    }
   
   return (
-    <div className="App">
+    <div className={`App${!isWidgetDisplayed || !isTreeDisplayed ? ' app-collapsed' : ''}`}>
       <button title={(isWidgetDisplayed ? 'hide' : 'show') + ' widget'} 
               onClick={hideShowWidget} 
               className='showHideBtn'>{(isWidgetDisplayed ? '–' : '+')}
@@ -75,7 +82,7 @@ function App() {
       {tree && isTreeDisplayed 
       ? renderParentDOMTree(tree) 
       : <div className='showDomTreeWrapper'>
-          <button onClick={() => setIsTreeDisplayed(true)}>Show DOM Tree</button>
+          <button onClick={displayTree}>Show DOM Tree</button>
         </div>}
     </div>
   );

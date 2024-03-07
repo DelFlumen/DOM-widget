@@ -9,6 +9,10 @@
   overflow-y: auto;
 }
 
+.app-collapsed {
+  overflow-y: hidden;
+}
+
 button {
   cursor: pointer;
 }

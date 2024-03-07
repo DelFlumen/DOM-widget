@@ -3,6 +3,8 @@ const style = document.createElement('style');
 style.innerText = '.highlighted-dom-element { background-color: lavender !important; } .collapsedFrame { height: 12vh !important; border-radius: 5px !important}';
 document.head.appendChild(style);
 
+const iframe = document.getElementById('frame');
+
 window.addEventListener('DOMContentLoaded', function() {
     //make each element identifiable for DOM widget: attach id to each element (using class attribute in order to not overwrite existing id attribute)
     document.querySelectorAll('*').forEach((elem, idx) => {
@@ -19,9 +21,12 @@ window.addEventListener('DOMContentLoaded', function() {
 }, false);
 
 window.addEventListener('message', function(event) {
+    if (event.data.type === 'showTree') {
+        iframe.setAttribute('scrolling', 'auto');
+    }
+
     //handle widget hiding
-    if (event.data.type === 'hideWidget' || event.data.type === 'showWidget') {
-        const iframe = document.getElementById('frame');
+    else if (event.data.type === 'hideWidget' || event.data.type === 'showWidget') {
         if (iframe && event.data.type === 'hideWidget') {
             iframe.classList.add('collapsedFrame');
         }
@@ -31,7 +36,7 @@ window.addEventListener('message', function(event) {
     }
 
     //handle element highlighting
-    if (event.data.type === 'highlightNode') {
+    else if (event.data.type === 'highlightNode') {
         //remove previous highlighting
         const prevElem = document.querySelector('.highlighted-dom-element'); 
 
