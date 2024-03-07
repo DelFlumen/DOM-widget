@@ -6,6 +6,7 @@
   flex-direction: column;
   color: whitesmoke;
   height: 100vh;
+  overflow-y: auto;
 }
 
 button {
@@ -39,11 +40,12 @@ button {
 }
 
 .divider {
-  margin: 0 auto 1rem;
+  display: inline-block;
+  margin-bottom: 1rem;
   height: 2px;
-  width: 100%;
   background: blue;
   background: linear-gradient(90deg, hsl(0, 0%, 20%), hsl(0, 0%, 70%), hsl(0, 0%, 20%));
+  flex-shrink: 0;
 }
 
 h1 {

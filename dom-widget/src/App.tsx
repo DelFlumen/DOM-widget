@@ -66,16 +66,16 @@ function App() {
   
   return (
     <div className="App">
-        <button title={(isWidgetDisplayed ? 'hide' : 'show') + ' widget'} 
-                onClick={hideShowWidget} 
-                className='showHideBtn'>{(isWidgetDisplayed ? '–' : '+')}
-        </button>
+      <button title={(isWidgetDisplayed ? 'hide' : 'show') + ' widget'} 
+              onClick={hideShowWidget} 
+              className='showHideBtn'>{(isWidgetDisplayed ? '–' : '+')}
+      </button>
       <h1>DOM Tree Widget</h1>
       <div className="divider"></div>
       {tree && isTreeDisplayed 
       ? renderParentDOMTree(tree) 
       : <div className='showDomTreeWrapper'>
-        <button onClick={() => setIsTreeDisplayed(true)}>Show DOM Tree</button>
+          <button onClick={() => setIsTreeDisplayed(true)}>Show DOM Tree</button>
         </div>}
     </div>
   );
