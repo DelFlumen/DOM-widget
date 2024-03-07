@@ -52,14 +52,14 @@ function App() {
     setIsWidgetDisplayed(!isWidgetDisplayed);
   }
 
-  const renderParentDOM = (tree: Node) => { 
+  const renderParentDOMTree = (tree: Node) => { 
     if (!tree) return null;
 
     return (
       <ul key={`${tree.className}-ul`}>
         <li key={`${tree.className}-li`}>
           <div onClick={(e) => highlightNode(e, tree)}>{tree.tag}</div>
-          {tree.children && tree.children.map((child) => renderParentDOM(child))}
+          {tree.children && tree.children.map((child) => renderParentDOMTree(child))}
         </li> 
       </ul>)
    }
@@ -73,7 +73,7 @@ function App() {
       <h1>DOM Tree Widget</h1>
       <div className="divider"></div>
       {tree && isTreeDisplayed 
-      ? renderParentDOM(tree) 
+      ? renderParentDOMTree(tree) 
       : <div className='showDomTreeWrapper'>
         <button onClick={() => setIsTreeDisplayed(true)}>Show DOM Tree</button>
         </div>}
