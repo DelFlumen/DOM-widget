@@ -1,4 +1,4 @@
-import {useEffect, useState, useCallback} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import './App.css';
 
 type Node = { tag: string; className?: string; children: Node[] | null; } | null;
@@ -6,30 +6,21 @@ type Node = { tag: string; className?: string; children: Node[] | null; } | null
 function App() {
   const [tree, setTree] = useState<Node>(null);
   const [isTreeDisplayed, setIsTreeDisplayed] = useState(false);
-
-console.log({tree})
-
-  useEffect(() => {
-    if (isTreeDisplayed) {
-    window.parent.postMessage({type: 'getDOM'}, '*');
-    }
-  }, [isTreeDisplayed])
+  const [isWidgetDisplayed, setIsWidgetDisplayed] = useState(true);
   
-  const generateDOMTree = (node: HTMLElement | Element | null) => {
+  const generateDOMTree = useCallback((node: HTMLElement | Element | null) => {
     if (!node) return null;
     const children: Node[] = Array.from(node.children).map((child) => generateDOMTree(child));
 
     return {tag: node.tagName, className: node.className, children};
-  }
+  }, []);
 
-  const handleGetDOM = (event: MessageEvent<any>) => {
-
+  const handleGetDOM = useCallback((event: MessageEvent<any>) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(event.data.parentDocument, 'text/html');
-    console.log({doc})
     if (!doc.querySelector('body')?.children.length) return;
 
-    //remove iframeElem from parent html copy
+    //remove frame and script from parent html copy
     const iframeElem = doc.querySelector('iframe');
     if (iframeElem) {
       iframeElem.parentNode?.removeChild(iframeElem);
@@ -42,7 +33,7 @@ console.log({tree})
     const generatedTree = generateDOMTree(doc.querySelector('body'));
 
     setTree(generatedTree);    
-  };
+  }, [generateDOMTree]);
 
   useEffect(() => {
     window.addEventListener('message', handleGetDOM, false);
@@ -50,35 +41,40 @@ console.log({tree})
     return () => {
       window.removeEventListener('message', handleGetDOM, false);
     }
-  }, []);
-
-console.log(tree);
+  }, [handleGetDOM]);
 
   const highlightNode = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, node: Node) => {
-    console.log('hover');
-    e.stopPropagation();
     window.parent.postMessage({type: 'highlightNode', className: node?.className }, '*');
+  }
+
+  const hideShowWidget = () => { 
+    window.parent.postMessage({type: `${isWidgetDisplayed ? 'hideWidget' : 'showWidget'}`}, '*');
+    setIsWidgetDisplayed(!isWidgetDisplayed);
   }
 
   const renderParentDOM = (tree: Node) => { 
     if (!tree) return null;
 
     return (
-    <ul key={`${tree.className}-ul`}>
-      <li key={`${tree.className}-li`}>
-        <div onClick={(e) => highlightNode(e, tree)}>{tree.tag}</div>
-        {tree.children && tree.children.map((child, idx) => renderParentDOM(child))}
-      </li> 
-    </ul>)
+      <ul key={`${tree.className}-ul`}>
+        <li key={`${tree.className}-li`}>
+          <div onClick={(e) => highlightNode(e, tree)}>{tree.tag}</div>
+          {tree.children && tree.children.map((child) => renderParentDOM(child))}
+        </li> 
+      </ul>)
    }
   
   return (
     <div className="App">
+        <button title={(isWidgetDisplayed ? 'hide' : 'show') + ' widget'} 
+                onClick={hideShowWidget} 
+                className='showHideBtn'>{(isWidgetDisplayed ? '–' : '+')}
+        </button>
       <h1>DOM Tree Widget</h1>
-      <div id="divider"></div>
+      <div className="divider"></div>
       {tree && isTreeDisplayed 
       ? renderParentDOM(tree) 
-      : <div style={{display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+      : <div className='showDomTreeWrapper'>
         <button onClick={() => setIsTreeDisplayed(true)}>Show DOM Tree</button>
         </div>}
     </div>
