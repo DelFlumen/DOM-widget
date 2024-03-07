@@ -47,7 +47,8 @@ function App() {
     window.parent.postMessage({type: 'highlightNode', className: node?.className }, '*');
   }
 
-  const hideShowWidget = () => { 
+  const hideShowWidget = () => {
+    window.document.querySelector('.app')?.scrollTo(0, 0);
     window.parent.postMessage({type: `${isWidgetDisplayed ? 'hideWidget' : 'showWidget'}`}, '*');
     setIsWidgetDisplayed(!isWidgetDisplayed);
   }
@@ -72,7 +73,7 @@ function App() {
    }
   
   return (
-    <div className={`App${!isWidgetDisplayed || !isTreeDisplayed ? ' app-collapsed' : ''}`}>
+    <div className={`app${!isWidgetDisplayed || !isTreeDisplayed ? ' app-collapsed' : ''}`}>
       <button title={(isWidgetDisplayed ? 'hide' : 'show') + ' widget'} 
               onClick={hideShowWidget} 
               className='showHideBtn'>{(isWidgetDisplayed ? '–' : '+')}
